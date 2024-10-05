@@ -75,15 +75,6 @@ public class TelegramControllerCreator {
     protected TelegramController createController(Update update){
 
         switch (message){
-            case UserHomePage.BTN_BUY_CONFIG->{
-                return buyController;
-            }
-            case AdminHomePage.BTN_VIEW_ORDERS -> {
-                return viewOrdersController;
-            }
-            case UserHomePage.BTN_TEST_ACCOUNT -> {
-                return testAccountController;
-            }
             case BasePage.BTN_BACK->{
                 return mainMenuController;
             }
@@ -106,10 +97,7 @@ public class TelegramControllerCreator {
 
         if(currentStepWithPayload != null){
             return switch (currentStepWithPayload.getUserStep()) {
-                case BUY_SELECT_PLAN, BUY_PAYMENT_METHOD, BUY_WAIT_FOR_RECEIPT -> buyController;
-                case ADMIN_VIEW_ORDERS -> viewOrdersController;
                 case ADMIN_VIEW_USERS -> handleUsersController;
-                case ADMIN_WAITING_FOR_ORDER_COMMANDS -> handleOrdersController;
                 case ADMIN_SELECT_PLAN -> createConfigController;
                 case ADMIN_VIEW_PLANS -> viewPlansController;
                 case ADMIN_WAITING_FOR_PLAN_COMMANDS -> handlePlansController;

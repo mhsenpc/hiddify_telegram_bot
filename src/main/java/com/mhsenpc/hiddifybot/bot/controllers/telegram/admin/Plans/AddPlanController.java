@@ -89,7 +89,6 @@ public class AddPlanController extends TelegramController {
                     plan.setMonths(currentPayload.getMonths());
                     plan.setTrafficLimit(currentPayload.getTrafficLimit());
                     plan.setConnectionLimit(currentPayload.getConnectionLimit());
-                    plan.setPrice(currentPayload.getPrice());
                     planRepository.save(plan);
 
                     userStepService.set(chatId, new UserStepWithPayload(UserStep.ADMIN_VIEW_PLANS));

@@ -19,14 +19,11 @@ public class OrderFormatter {
         text += "%s گیگ" + System.lineSeparator();
         text += "کاربره %s" + System.lineSeparator();
         text += "خریدار: %s" + System.lineSeparator();
-        text += "%s تومان" + System.lineSeparator();
 
         Plan plan = order.getPlan();
         User user = order.getUser();
         String buyerText = user.getUsername() + "(" + user.getFirstName() + " " + user.getLastName() +  ")";
 
-        String formattedNumber = numberFormatter.format(plan.getPrice());
-
-        return String.format(text, plan.getMonths(), plan.getTrafficLimit(), plan.getConnectionLimit(), buyerText , formattedNumber);
+        return String.format(text, plan.getMonths(), plan.getTrafficLimit(), plan.getConnectionLimit(), buyerText);
     }
 }

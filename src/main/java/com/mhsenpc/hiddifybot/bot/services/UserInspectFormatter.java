@@ -14,7 +14,6 @@ public class UserInspectFormatter {
 
         String pattern = "%s" + System.lineSeparator()
                 + "Clients: %s " +  System.lineSeparator()
-                + "Tests: %s " +  System.lineSeparator()
                 + "Orders: %s " +  System.lineSeparator();
 
 
@@ -22,7 +21,6 @@ public class UserInspectFormatter {
                 pattern,
                 userFormatter.getFormattedUser(user),
                 user.getClients().size(),
-                user.getTestConfigs().size(),
                 user.getOrders().size()
         );
     }

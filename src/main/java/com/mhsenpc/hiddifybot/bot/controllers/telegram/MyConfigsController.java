@@ -19,16 +19,6 @@ public class MyConfigsController extends TelegramController {
     public void invoke(Update update) {
         User dbUser = userRepository.findByChatId(this.chatId);
         printRealConfigs(dbUser);
-        printTestConfigs(dbUser);
-    }
-
-    private void printTestConfigs(User dbUser) {
-
-        for(TestConfig testConfig: dbUser.getTestConfigs()){
-            String text = "اکانت تست: " + System.lineSeparator();
-            text += testConfig.getUrl() + System.lineSeparator();
-            sendMessage(text);
-        }
     }
 
     private void printRealConfigs(User dbUser) {

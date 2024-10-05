@@ -12,12 +12,9 @@ public class PlanFormatter {
 
     public String format(Plan plan){
 
-        String formattedNumber = numberFormatter.format(plan.getPrice());
-
         return  plan.getMonths() + " ماهه" + "\n" +
                 plan.getTrafficLimit() + " گیگ" + "\n" +
-                plan.getConnectionLimit() + " کاربره" + "\n" +
-                formattedNumber +  " تومان" ;
+                plan.getConnectionLimit() + " کاربره" + "\n" ;
 
     }
 }

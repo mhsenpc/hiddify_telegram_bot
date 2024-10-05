@@ -9,7 +9,6 @@ import com.mhsenpc.hiddifybot.bot.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Date;
 
 @Service
@@ -35,23 +34,23 @@ public class ConfirmOrderService {
 
     public void confirm(Order order) {
 
-        XUIClient xuiClient = clientDirector.build(order);
+        //XuiClient xuiClient = clientDirector.build(order);
         String profileUrl = "";
         setOrderStatusToConfirmed(order);
         sendAccountDetailsToUser(order, profileUrl);
-        storeClient(order, xuiClient, profileUrl);
+        storeClient(order, profileUrl);
     }
 
-    private void storeClient(Order order, XUIClient xuiClient, String profileUrl) {
+    private void storeClient(Order order, String profileUrl) {
 
         Client client = new Client();
-        client.setName(xuiClient.getEmail());
+        //client.setName(xuiClient.getEmail());
         client.setUrl(profileUrl);
         client.setOrder(order);
         client.setUser(order.getUser());
         client.setCreatedAt(new Date());
-        client.setUuid(xuiClient.getId());
-        client.setValidUntil(new Date(xuiClient.getExpiryTime()));
+        //client.setUuid(xuiClient.getId());
+        //client.setValidUntil(new Date(xuiClient.getExpiryTime()));
         clientRepository.save(client);
     }
 
