@@ -3,11 +3,8 @@ package com.mhsenpc.hiddifybot.bot.services;
 import com.mhsenpc.hiddifybot.bot.entity.Order;
 import com.mhsenpc.hiddifybot.bot.enums.OrderStatus;
 import com.mhsenpc.hiddifybot.bot.repository.OrderRepository;
-import com.mhsenpc.hiddifybot.xui.exceptions.InboundNotRetrievedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 public class OrderService {
@@ -35,7 +32,7 @@ public class OrderService {
                 allOrdersCount, confirmedOrdersCount, rejectedOrdersCount, pendingOrdersWithReceipt);
     }
 
-    public void acceptOrder(int orderId) throws InboundNotRetrievedException, IOException {
+    public void acceptOrder(int orderId) {
 
         Order order = orderRepository.findById(orderId).get();
         confirmOrderService.confirm(order);

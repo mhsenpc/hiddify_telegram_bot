@@ -111,7 +111,6 @@ public class CreateConfigController extends TelegramController {
             order.setPlan(plan.get());
             order.setStatus(OrderStatus.PENDING);
             order.setUser(user);
-            order.setPaymentMethod(currentPayload.getPaymentMethod());
             order.setCreatedAt(new Date());
             order = orderRepository.save(order);
 

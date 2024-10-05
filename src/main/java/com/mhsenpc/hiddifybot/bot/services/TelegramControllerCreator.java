@@ -2,8 +2,6 @@ package com.mhsenpc.hiddifybot.bot.services;
 
 import com.mhsenpc.hiddifybot.bot.controllers.telegram.*;
 import com.mhsenpc.hiddifybot.bot.controllers.telegram.admin.*;
-import com.mhsenpc.hiddifybot.bot.controllers.telegram.admin.Orders.HandleOrdersController;
-import com.mhsenpc.hiddifybot.bot.controllers.telegram.admin.Orders.ViewOrdersController;
 import com.mhsenpc.hiddifybot.bot.controllers.telegram.admin.Plans.AddPlanController;
 import com.mhsenpc.hiddifybot.bot.controllers.telegram.admin.Plans.HandlePlansController;
 import com.mhsenpc.hiddifybot.bot.controllers.telegram.admin.Plans.ViewPlansController;
@@ -28,18 +26,6 @@ public class TelegramControllerCreator {
 
     @Autowired
     private MainMenuController mainMenuController;
-
-    @Autowired
-    private BuyController buyController;
-
-    @Autowired
-    private ViewOrdersController viewOrdersController;
-
-    @Autowired
-    private TestAccountController testAccountController;
-
-    @Autowired
-    private HandleOrdersController handleOrdersController;
 
     @Autowired
     private HandleUsersController handleUsersController;

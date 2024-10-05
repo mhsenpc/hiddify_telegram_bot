@@ -1,15 +1,11 @@
 package com.mhsenpc.hiddifybot.bot.services;
 
 import com.mhsenpc.hiddifybot.bot.config.ConfigurationManager;
-import com.mhsenpc.hiddifybot.bot.config.XUIConfigBuilder;
 import com.mhsenpc.hiddifybot.bot.entity.Client;
 import com.mhsenpc.hiddifybot.bot.entity.Order;
 import com.mhsenpc.hiddifybot.bot.enums.OrderStatus;
 import com.mhsenpc.hiddifybot.bot.repository.ClientRepository;
 import com.mhsenpc.hiddifybot.bot.repository.OrderRepository;
-import com.mhsenpc.hiddifybot.xui.dto.XUIClient;
-import com.mhsenpc.hiddifybot.xui.exceptions.InboundNotRetrievedException;
-import com.mhsenpc.hiddifybot.xui.services.VPNConfigBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +25,7 @@ public class ConfirmOrderService {
     private ClientDirector clientDirector;
 
     @Autowired
-    private TransactionRepository transactionRepository;
-
-    @Autowired
     private ClientRepository clientRepository;
-
-    @Autowired
-    private VPNConfigBuilder vpnConfigBuilder;
 
     @Autowired
     private ConfigurationManager configurationManager;
@@ -43,28 +33,20 @@ public class ConfirmOrderService {
     @Autowired
     private QRCodeService qrCodeService;
 
-    @Autowired
-    private XUIConfigBuilder xuiConfigBuilder;
-
-    public void confirm(Order order) throws InboundNotRetrievedException, IOException {
+    public void confirm(Order order) {
 
         XUIClient xuiClient = clientDirector.build(order);
-        String vpnConfig = this.vpnConfigBuilder
-                .setClient(xuiClient)
-                .setXUIConfig(xuiConfigBuilder.build())
-                .build();
+        String profileUrl = "";
         setOrderStatusToConfirmed(order);
-        sendConfirmationMessageToUser(order);
-        sendAccountDetailsToUser(order, vpnConfig);
-        createTransaction(order);
-        storeClient(order, xuiClient, vpnConfig);
+        sendAccountDetailsToUser(order, profileUrl);
+        storeClient(order, xuiClient, profileUrl);
     }
 
-    private void storeClient(Order order, XUIClient xuiClient, String vpnConfig) {
+    private void storeClient(Order order, XUIClient xuiClient, String profileUrl) {
 
         Client client = new Client();
         client.setName(xuiClient.getEmail());
-        client.setUrl(vpnConfig);
+        client.setUrl(profileUrl);
         client.setOrder(order);
         client.setUser(order.getUser());
         client.setCreatedAt(new Date());
@@ -73,28 +55,10 @@ public class ConfirmOrderService {
         clientRepository.save(client);
     }
 
-    private void createTransaction(Order order) {
-
-        Transaction transaction = new Transaction();
-        transaction.setUser(order.getUser());
-        transaction.setAmount(order.getPlan().getPrice());
-        transaction.setOrder(order);
-        transaction.setCreatedAt(new Date());
-        transactionRepository.save(transaction);
-    }
-
     private void setOrderStatusToConfirmed(Order order){
 
         order.setStatus(OrderStatus.CONFIRMED);
         orderRepository.save(order);
-    }
-
-    private void sendConfirmationMessageToUser(Order order){
-
-        String message = "تبریک. سفارش شما برای ساخت اکانت  " + order.getPlan().getMonths()  + " ماهه با حجم "  + order.getPlan().getTrafficLimit() + "گیگ تایید شد";
-        String receiver = order.getUser().getChatId();
-
-        messageService.send(receiver, message);
     }
 
     private void sendAccountDetailsToUser(Order order, String vpnConfig){

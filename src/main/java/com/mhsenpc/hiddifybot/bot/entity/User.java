@@ -34,15 +34,7 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private List<Transaction> transactions = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
     private List<Client> clients = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<TestConfig> testConfigs = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -123,17 +115,6 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }
-
-    public void addTransaction(Transaction transaction){
-        this.transactions.add(transaction);
-    }
 
     public List<Client> getClients() {
         return clients;
@@ -145,18 +126,6 @@ public class User {
 
     public void addClient(Client client){
         this.clients.add(client);
-    }
-
-    public List<TestConfig> getTestConfigs() {
-        return testConfigs;
-    }
-
-    public void setTestConfigs(List<TestConfig> testConfigs) {
-        this.testConfigs = testConfigs;
-    }
-
-    public void addTestConfig(TestConfig testConfig){
-        this.testConfigs.add(testConfig);
     }
 
     public List<Order> getOrders() {

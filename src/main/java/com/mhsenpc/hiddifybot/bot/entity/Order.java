@@ -23,12 +23,6 @@ public class Order {
             cascade = CascadeType.ALL,
             mappedBy = "order"
     )
-    private Transaction transaction;
-
-    @OneToOne(
-            cascade = CascadeType.ALL,
-            mappedBy = "order"
-    )
     private Client client;
 
     @ManyToOne
@@ -68,14 +62,6 @@ public class Order {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
     }
 
     public Client getClient() {
