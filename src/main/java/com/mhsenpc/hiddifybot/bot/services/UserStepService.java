@@ -1,0 +1,25 @@
+package com.mhsenpc.hiddifybot.bot.services;
+
+import com.mhsenpc.hiddifybot.bot.dto.UserStepWithPayload;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+
+@Service
+public class UserStepService {
+
+    private final HashMap<String, UserStepWithPayload> userStepWithPayload = new HashMap<>();
+
+    public UserStepWithPayload get(String chatId){
+        return userStepWithPayload.get(chatId);
+    }
+
+    public void set(String chatId, UserStepWithPayload newUserStepWithPayload){
+        this.userStepWithPayload.put(chatId, newUserStepWithPayload);
+    }
+
+    public void clear(String chatId){
+
+        userStepWithPayload.remove(chatId);
+    }
+}

@@ -1,0 +1,54 @@
+package com.mhsenpc.hiddifybot.bot.controllers;
+
+import com.mhsenpc.hiddifybot.bot.controllers.telegram.TelegramController;
+import com.mhsenpc.hiddifybot.bot.services.TelegramControllerCreator;
+import com.mhsenpc.hiddifybot.telegram.methods.SendMessageMethod;
+import com.mhsenpc.hiddifybot.telegram.services.RequestHandler;
+import com.mhsenpc.hiddifybot.telegram.types.Message;
+import com.mhsenpc.hiddifybot.telegram.types.Update;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@Slf4j
+public class TelegramRequestController {
+
+    @Autowired
+    private TelegramControllerCreator telegramControllerCreator;
+
+    @Autowired
+    private RequestHandler requestHandler;
+
+    @RequestMapping("/handle")
+    public void handleRequests(@RequestBody Update update){
+        try {
+
+            TelegramController controller = this.telegramControllerCreator.getController(update);
+            controller.invoke(update);
+            log.info(controller + " invoked");
+        }
+        catch (Exception exception) {
+            SendMessageMethod sendMessageMethod = new SendMessageMethod();
+            log.error(exception.toString());
+            sendMessageMethod.setChatId(getChatId(update));
+            sendMessageMethod.setText(
+                    "یگ مشکل فنی به وجود آمده است" + "\n" +
+                            exception.getMessage());
+            this.requestHandler.send(sendMessageMethod, Message.class);
+        }
+    }
+
+    private String getChatId(Update update){
+
+        if (update.getCallbackQuery() != null){
+            return update.getCallbackQuery().getFrom().getId();
+        }
+        else if(update.getMessage() != null){
+            return update.getMessage().getFrom().getId();
+        }
+        return "";
+    }
+}

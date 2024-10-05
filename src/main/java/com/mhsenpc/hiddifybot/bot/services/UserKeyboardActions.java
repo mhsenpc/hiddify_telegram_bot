@@ -1,0 +1,68 @@
+package com.mhsenpc.hiddifybot.bot.services;
+
+import com.mhsenpc.hiddifybot.bot.dto.UserItemButtonCallback;
+import com.mhsenpc.hiddifybot.bot.entity.User;
+import com.mhsenpc.hiddifybot.bot.enums.UserCommandType;
+import com.mhsenpc.hiddifybot.bot.enums.UserStatus;
+import com.mhsenpc.hiddifybot.telegram.types.keyaboard.InlineKeyboardButton;
+import com.mhsenpc.hiddifybot.telegram.types.keyaboard.InlineKeyboardMarkup;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserKeyboardActions {
+
+    public InlineKeyboardMarkup getKeyboardForUser(User user) throws Exception {
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        if(user.isNormal()){
+            inlineKeyboardMarkup.addRow(getUpgradeUserToAdminButton(user));
+        }
+
+        if(user.isAdmin()){
+            inlineKeyboardMarkup.addRow(getDowngradeAdminToUserButton(user));
+        }
+
+        if(user.getStatus() == UserStatus.ACTIVE.getValue()){
+            inlineKeyboardMarkup.addRow(getBlockUserButton(user));
+        }
+
+        if(user.getStatus() == UserStatus.INACTIVE.getValue()){
+            inlineKeyboardMarkup.addRow(getUnblockUserButton(user));
+        }
+
+        inlineKeyboardMarkup.addRow(getInspectToUserButton(user));
+
+        return inlineKeyboardMarkup;
+    }
+
+    private InlineKeyboardButton getBlockUserButton(User user) throws Exception {
+
+        String blockCallbackData = UserItemButtonCallbackSerializer.serialize(new UserItemButtonCallback(user.getUserId(), UserCommandType.BLOCK));
+        return new InlineKeyboardButton("بلاک", blockCallbackData);
+    }
+
+    private InlineKeyboardButton getUnblockUserButton(User user) throws Exception {
+
+        String blockCallbackData = UserItemButtonCallbackSerializer.serialize(new UserItemButtonCallback(user.getUserId(), UserCommandType.UNBLOCK));
+        return new InlineKeyboardButton("آنبلاگ", blockCallbackData);
+    }
+
+    private InlineKeyboardButton getUpgradeUserToAdminButton(User user) throws Exception {
+
+        String blockCallbackData = UserItemButtonCallbackSerializer.serialize(new UserItemButtonCallback(user.getUserId(), UserCommandType.UPGRADE_TO_ADMIN));
+        return new InlineKeyboardButton("ارتقا به ادمین", blockCallbackData);
+    }
+
+    private InlineKeyboardButton getDowngradeAdminToUserButton(User user) throws Exception {
+
+        String blockCallbackData = UserItemButtonCallbackSerializer.serialize(new UserItemButtonCallback(user.getUserId(), UserCommandType.DOWNGRADE_TO_USER));
+        return new InlineKeyboardButton("تنزل درجه", blockCallbackData);
+    }
+
+    private InlineKeyboardButton getInspectToUserButton(User user) throws Exception {
+
+        String blockCallbackData = UserItemButtonCallbackSerializer.serialize(new UserItemButtonCallback(user.getUserId(), UserCommandType.INSPECT));
+        return new InlineKeyboardButton("جزئیات", blockCallbackData);
+    }
+}
