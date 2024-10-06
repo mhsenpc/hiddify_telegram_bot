@@ -1,11 +1,7 @@
 {
-    "BOT_HOST_URL": "https://bot.example.com:8888",
-    "PANEL_BASE_URL": "https://example.com",
-    "PANEL_USERNAME": "admin",
-    "PANEL_PASSWORD": "password123",
-    "INBOUND_ID_OVERRIDE": "3",
-    "VPN_HOST": "vpn.example.com",
-    "VPN_PORT": "8080",
-    "SAVE_ORDER_MESSAGE": "لطفا مبلغ را به شماره کارت ۲۳۲۳۲۳۲۳۲۳۲۳ واریز کنید. در اسرع وقت اکانت شما آماده خواهد شد",
-    "BOT_TOKEN": "abcdef123456"
+    "BOT_HOST_URL": "https://b113-37-201-192-98.ngrok-free.app",
+    "BASE_URL": "https://erer.qweqwe.site/434343",
+    "API_KEY": "37e21c57-qwewqe-4a5c-we-qwe",
+    "BOT_TOKEN": "aaweqwew",
+    "PROFILE_LINK": "https://erer.qweqwe.site/awewe/%s/#%s"
 }
