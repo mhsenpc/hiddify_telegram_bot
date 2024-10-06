@@ -37,6 +37,7 @@ openssl pkcs12 -export -out keystore.p12 -inkey private.key -in cert.crt -name m
 
 ## تصاویری از ربات
 
+![image](https://github.com/user-attachments/assets/2a3fdf0d-e729-4bcf-878f-55a222b9bfb1)
 
 ![image](https://github.com/mhsenpc/xui-telegram-bot/assets/5123843/1a101033-87fc-47de-a837-13e08f41a7b6)
-<img width="661" alt="image" src="https://github.com/user-attachments/assets/62f5f9b4-45ca-49ba-a62b-03dd2f026d2c">
+![image](https://github.com/user-attachments/assets/5d30395d-0fe2-45a6-8851-131042f4b850)
