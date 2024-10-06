@@ -10,6 +10,6 @@ public class HomeController {
     public String showWelcome(){
 
 
-        return "Welcome to XUI bot";
+        return "Welcome to Hiddify telgram bot";
     }
 }
