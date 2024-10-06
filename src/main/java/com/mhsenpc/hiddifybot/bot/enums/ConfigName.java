@@ -5,4 +5,5 @@ public enum ConfigName {
     API_KEY,
     BOT_TOKEN,
     BOT_HOST_URL,
+    PROFILE_LINK
 }

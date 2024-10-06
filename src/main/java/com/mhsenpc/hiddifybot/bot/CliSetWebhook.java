@@ -2,9 +2,6 @@ package com.mhsenpc.hiddifybot.bot;
 
 import com.mhsenpc.hiddifybot.bot.config.ConfigurationManager;
 import com.mhsenpc.hiddifybot.bot.enums.ConfigName;
-import com.mhsenpc.hiddifybot.hiddify.dto.CreateUserRequestDTO;
-import com.mhsenpc.hiddifybot.hiddify.dto.CreateUserResponseDTO;
-import com.mhsenpc.hiddifybot.hiddify.services.UserService;
 import com.mhsenpc.hiddifybot.telegram.methods.SetWebhookMethod;
 import com.mhsenpc.hiddifybot.telegram.services.RequestHandler;
 import com.mhsenpc.hiddifybot.telegram.types.SetWebhookResponse;
@@ -30,28 +27,8 @@ public class CliSetWebhook implements ApplicationRunner {
     @Value("${github.actions:false}")
     private boolean githubActions;
 
-    @Autowired
-    private UserService userService;
-
     @Override
     public void run(ApplicationArguments args) throws IOException {
-
-        // todo: remove this temp code
-        String baseUrl = configurationManager.getConfig(ConfigName.BASE_URL);
-        String apiKey =  configurationManager.getConfig(ConfigName.API_KEY);
-        CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO();
-        createUserRequestDTO.setName("test-mohsen");
-        createUserRequestDTO.setUsage_limit_GB(200);
-        createUserRequestDTO.setPackage_days(90);
-        createUserRequestDTO.setEnable(true);
-        createUserRequestDTO.setIs_active(true);
-        createUserRequestDTO.setMode("no_reset");
-        CreateUserResponseDTO createUserResponseDTO = userService.createUser(baseUrl, apiKey, createUserRequestDTO);
-
-
-
-
-        System.exit(0);
 
         if(githubActions){
             return;

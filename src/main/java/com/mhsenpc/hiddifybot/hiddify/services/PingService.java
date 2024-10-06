@@ -1,50 +1,58 @@
 package com.mhsenpc.hiddifybot.hiddify.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsenpc.hiddifybot.hiddify.dto.PingResponseDTO;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 @Service
 public class PingService {
 
-    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
-    public PingService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public PingService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     public PingResponseDTO ping(String baseUrl, String apiKey) {
-
         String url = baseUrl + "/api/v2/panel/ping/";
 
-        // Set up the headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", "application/json");
-        headers.set("Hiddify-API-Key", apiKey);
+        // Create the HTTP client
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+            // Create a GET request
+            HttpGet request = new HttpGet(url);
 
-        try {
-            // Send the GET request
-            ResponseEntity<PingResponseDTO> response = restTemplate.exchange(
-                    url, HttpMethod.GET, entity, PingResponseDTO.class);
+            // Set headers
+            request.setHeader(new BasicHeader("Accept", "application/json"));
+            request.setHeader(new BasicHeader("Hiddify-API-Key", apiKey));
 
-            // Check if the response has a 200 OK status
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody(); // Returns the message if successful
+            // Execute the request and get the response
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getCode();
+                String responseBody = EntityUtils.toString(response.getEntity());
+
+                if (statusCode >= 200 && statusCode < 300) {
+                    // Successful response, map to PingResponseDTO
+                    return objectMapper.readValue(responseBody, PingResponseDTO.class);
+                } else if (statusCode >= 400 && statusCode < 500) {
+                    // Client error, return the error message in PingResponseDTO
+                    PingResponseDTO errorResponse = new PingResponseDTO();
+                    errorResponse.setMessage(responseBody);
+                    return errorResponse;
+                }
             }
-        } catch (HttpClientErrorException ex) {
-            // Handle error cases (401, 404, etc.)
-            if (ex.getStatusCode().is4xxClientError()) {
-                PingResponseDTO errorResponse = new PingResponseDTO();
-                errorResponse.setMessage(ex.getResponseBodyAsString());
-                return errorResponse;
-            }
+
+        } catch (IOException | HttpException e) {
+            e.printStackTrace();  // You can handle exceptions properly here
         }
 
         return null; // In case something goes wrong

@@ -1,55 +1,69 @@
 package com.mhsenpc.hiddifybot.hiddify.services;
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mhsenpc.hiddifybot.hiddify.dto.CreateUserRequestDTO;
 import com.mhsenpc.hiddifybot.hiddify.dto.CreateUserResponseDTO;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 @Service
 public class UserService {
 
-    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
-    public UserService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public UserService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     public CreateUserResponseDTO createUser(String baseUrl, String apiKey, CreateUserRequestDTO createUserRequestDTO) {
         String url = baseUrl + "/api/v2/admin/user/";
 
-        // Set up the headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", "*/*");
-        headers.set("Content-Type", "application/json");
-        headers.set("Hiddify-API-Key", apiKey);
+        // Create the HTTP client
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 
-        HttpEntity<CreateUserRequestDTO> entity = new HttpEntity<>(createUserRequestDTO, headers);
+            // Create a POST request
+            HttpPost request = new HttpPost(url);
 
-        try {
-            // Send the POST request
-            ResponseEntity<CreateUserResponseDTO> response = restTemplate.exchange(
-                    url, HttpMethod.POST, entity, CreateUserResponseDTO.class);
+            // Set headers
+            request.setHeader(new BasicHeader("Accept", "*/*"));
+            request.setHeader(new BasicHeader("Content-Type", "application/json"));
+            request.setHeader(new BasicHeader("Hiddify-API-Key", apiKey));
 
-            // Return the response for status code 200
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
+            // Convert CreateUserRequestDTO to JSON string and set it as the request body
+            String jsonBody = objectMapper.writeValueAsString(createUserRequestDTO);
+            request.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));
+
+            // Execute the POST request and get the response
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                int statusCode = response.getCode();
+                String responseBody = EntityUtils.toString(response.getEntity());
+
+                if (statusCode >= 200 && statusCode < 300) {
+                    // Map the JSON response to CreateUserResponseDTO
+                    return objectMapper.readValue(responseBody, CreateUserResponseDTO.class);
+                } else if (statusCode >= 400 && statusCode < 500) {
+                    // Handle client error, map the error response
+                    CreateUserResponseDTO errorResponse = new CreateUserResponseDTO();
+                    errorResponse.setMessage(responseBody);
+                    errorResponse.setDetail(responseBody);
+                    return errorResponse;
+                }
             }
-        } catch (HttpClientErrorException ex) {
-            // Handle error responses (401, 404, 422, etc.)
-            CreateUserResponseDTO errorResponse = new CreateUserResponseDTO();
-            errorResponse.setMessage(ex.getResponseBodyAsString());
-            if (ex.getStatusCode().is4xxClientError()) {
-                errorResponse.setDetail(ex.getResponseBodyAsString());
-            }
-            return errorResponse;
+
+        } catch (IOException | HttpException e) {
+            e.printStackTrace();  // You can handle exceptions properly here
         }
 
-        return null;
+        return null; // Return null in case of errors
     }
 }
