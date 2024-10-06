@@ -56,46 +56,21 @@ public class AddPlanController extends TelegramController {
 
                     currentPayload.setTrafficLimit(connections);
 
-                    currentStepWithPayload.setUserStep(UserStep.ADMIN_CREATE_PLAN_WAIT_FOR_CONNECTIONS);
-                    userStepService.set(chatId, currentStepWithPayload);
-                    sendMessage("چه تعداد کاربر بصورت همزمان مجاز به استفاده از سرویس شما هستند؟ فقط عدد");
+                    try{
+                        Plan plan = new Plan();
+                        plan.setMonths(currentPayload.getMonths());
+                        plan.setTrafficLimit(currentPayload.getTrafficLimit());
+                        planRepository.save(plan);
+
+                        userStepService.set(chatId, new UserStepWithPayload(UserStep.ADMIN_VIEW_PLANS));
+                        sendMessage("تعرفه با موفقیت ذخیره شد");
+                    }
+                    catch (NumberFormatException exception){
+                        sendMessage("لطفا قیمت را بصورت صحیح وارد کنید");
+                    }
                 }
                 catch (NumberFormatException exception){
                     sendMessage("لطفا میزان ترافیک مجاز را بصورت صحیح به گیگابایت بنویسید");
-                }
-            }
-            case ADMIN_CREATE_PLAN_WAIT_FOR_CONNECTIONS -> {
-
-                try {
-                    int connections = Integer.parseInt(message);
-
-                    currentPayload.setConnectionLimit(connections);
-
-                    currentStepWithPayload.setUserStep(UserStep.ADMIN_CREATE_PLAN_WAIT_FOR_PRICE);
-                    userStepService.set(chatId, currentStepWithPayload);
-                    sendMessage("لطفا قیمت این تعرفه را به تومان وارد کنید. فقط عدد بدون نقطه و ویرگول");
-                }
-                catch (NumberFormatException exception){
-                    sendMessage("لطفا تعداد کاربر همزمان را به درستی وارد کنید");
-                }
-            }
-            case ADMIN_CREATE_PLAN_WAIT_FOR_PRICE -> {
-                try{
-                    int price = Integer.parseInt(message);
-
-                    currentPayload.setPrice(price);
-
-                    Plan plan = new Plan();
-                    plan.setMonths(currentPayload.getMonths());
-                    plan.setTrafficLimit(currentPayload.getTrafficLimit());
-                    plan.setConnectionLimit(currentPayload.getConnectionLimit());
-                    planRepository.save(plan);
-
-                    userStepService.set(chatId, new UserStepWithPayload(UserStep.ADMIN_VIEW_PLANS));
-                    sendMessage("تعرفه با موفقیت ذخیره شد");
-                }
-                catch (NumberFormatException exception){
-                    sendMessage("لطفا قیمت را بصورت صحیح وارد کنید");
                 }
             }
         }

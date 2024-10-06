@@ -13,8 +13,7 @@ public class PlanFormatter {
     public String format(Plan plan){
 
         return  plan.getMonths() + " ماهه" + "\n" +
-                plan.getTrafficLimit() + " گیگ" + "\n" +
-                plan.getConnectionLimit() + " کاربره" + "\n" ;
+                plan.getTrafficLimit() + " گیگ" + "\n";
 
     }
 }

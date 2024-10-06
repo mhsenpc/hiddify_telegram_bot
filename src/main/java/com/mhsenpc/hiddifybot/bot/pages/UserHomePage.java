@@ -1,6 +1,7 @@
 package com.mhsenpc.hiddifybot.bot.pages;
 
 import com.mhsenpc.hiddifybot.telegram.methods.SendMessageMethod;
+import com.mhsenpc.hiddifybot.telegram.types.keyaboard.ReplyKeyboardRemove;
 
 public class UserHomePage extends SendMessageMethod {
 
@@ -8,6 +9,7 @@ public class UserHomePage extends SendMessageMethod {
 
     public UserHomePage() {
 
-        setText("کاربر گرامی. به ربات خرید وی پی ان خوش آمدید");
+        setText("برای استفاده از ربات با ادمین تماس بگیرید");
+        this.setReplyMarkup(new ReplyKeyboardRemove(true));
     }
 }

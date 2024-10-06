@@ -12,16 +12,14 @@ public class Plan {
     private int planId;
     private int months;
     private int trafficLimit;
-    private int connectionLimit;
     private Date deletedAt;
 
     public Plan() {
     }
 
-    public Plan(int months, int trafficLimit, int connectionLimit) {
+    public Plan(int months, int trafficLimit) {
         this.months = months;
         this.trafficLimit = trafficLimit;
-        this.connectionLimit = connectionLimit;
     }
 
     public int getPlanId() {
@@ -48,14 +46,6 @@ public class Plan {
         this.trafficLimit = trafficLimit;
     }
 
-    public int getConnectionLimit() {
-        return connectionLimit;
-    }
-
-    public void setConnectionLimit(int connectionLimit) {
-        this.connectionLimit = connectionLimit;
-    }
-
     public Date getDeletedAt() {
         return deletedAt;
     }
@@ -70,7 +60,6 @@ public class Plan {
                 "planId=" + planId +
                 ", months=" + months +
                 ", trafficLimit=" + trafficLimit +
-                ", connectionLimit=" + connectionLimit +
                 '}';
     }
 }

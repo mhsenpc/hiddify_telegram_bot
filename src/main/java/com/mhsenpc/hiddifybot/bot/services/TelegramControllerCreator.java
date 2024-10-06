@@ -101,7 +101,7 @@ public class TelegramControllerCreator {
                 case ADMIN_SELECT_PLAN -> createConfigController;
                 case ADMIN_VIEW_PLANS -> viewPlansController;
                 case ADMIN_WAITING_FOR_PLAN_COMMANDS -> handlePlansController;
-                case ADMIN_CREATE_PLAN_WAIT_FOR_CONNECTIONS, ADMIN_CREATE_PLAN_WAIT_FOR_MONTH, ADMIN_CREATE_PLAN_WAIT_FOR_PRICE, ADMIN_CREATE_PLAN_WAIT_FOR_TRAFFIC -> addPlanController;
+                case ADMIN_CREATE_PLAN_WAIT_FOR_MONTH,  ADMIN_CREATE_PLAN_WAIT_FOR_TRAFFIC -> addPlanController;
                 default -> mainMenuController;
             };
         }
