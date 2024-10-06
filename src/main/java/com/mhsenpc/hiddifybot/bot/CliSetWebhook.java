@@ -2,6 +2,9 @@ package com.mhsenpc.hiddifybot.bot;
 
 import com.mhsenpc.hiddifybot.bot.config.ConfigurationManager;
 import com.mhsenpc.hiddifybot.bot.enums.ConfigName;
+import com.mhsenpc.hiddifybot.hiddify.dto.CreateUserRequestDTO;
+import com.mhsenpc.hiddifybot.hiddify.dto.CreateUserResponseDTO;
+import com.mhsenpc.hiddifybot.hiddify.services.UserService;
 import com.mhsenpc.hiddifybot.telegram.methods.SetWebhookMethod;
 import com.mhsenpc.hiddifybot.telegram.services.RequestHandler;
 import com.mhsenpc.hiddifybot.telegram.types.SetWebhookResponse;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,8 +30,28 @@ public class CliSetWebhook implements ApplicationRunner {
     @Value("${github.actions:false}")
     private boolean githubActions;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public void run(ApplicationArguments args) throws IOException {
+
+        // todo: remove this temp code
+        String baseUrl = configurationManager.getConfig(ConfigName.BASE_URL);
+        String apiKey =  configurationManager.getConfig(ConfigName.API_KEY);
+        CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO();
+        createUserRequestDTO.setName("test-mohsen");
+        createUserRequestDTO.setUsage_limit_GB(200);
+        createUserRequestDTO.setPackage_days(90);
+        createUserRequestDTO.setEnable(true);
+        createUserRequestDTO.setIs_active(true);
+        createUserRequestDTO.setMode("no_reset");
+        CreateUserResponseDTO createUserResponseDTO = userService.createUser(baseUrl, apiKey, createUserRequestDTO);
+
+
+
+
+        System.exit(0);
 
         if(githubActions){
             return;
