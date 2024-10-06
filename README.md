@@ -1,4 +1,4 @@
-# xui-telegram-bot
+# hiddify-telegram-bot
 
 # معرفی اجمالی
 این نرم افزار یک ربات تلگرام است که به شما امکان استفاده از پنل Hiddify می دهد
