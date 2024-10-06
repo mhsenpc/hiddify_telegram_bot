@@ -37,8 +37,10 @@ public class RequestHandler {
         // Build multipart form data
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         builder.part("url", request.getUrl());
-        builder.part("certificate", new InputStreamResource(request.getCertificate()))
-                .header("Content-Disposition", "form-data; name=certificate; filename=certificate.pem");
+        if(request.getCertificate() != null) {
+            builder.part("certificate", new InputStreamResource(request.getCertificate()))
+                    .header("Content-Disposition", "form-data; name=certificate; filename=certificate.pem");
+        }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);

@@ -27,6 +27,10 @@ public class CliSetWebhook implements ApplicationRunner {
     @Value("${github.actions:false}")
     private boolean githubActions;
 
+    @Value("${server.ssl.enabled:false}")
+    private boolean sslEnabled;
+
+
     @Override
     public void run(ApplicationArguments args) throws IOException {
 
@@ -49,12 +53,14 @@ public class CliSetWebhook implements ApplicationRunner {
         setWebhookMethod.setUrl(botHostUrl + "handle");
         setWebhookMethod.setToken(token);
 
-        InputStream keyPemFileStream = getClass().getClassLoader().getResourceAsStream("cert.crt");
-        if(keyPemFileStream == null){
-            System.out.println("couldn't read certificate file.exiting...");
-            System.exit(1);
+        if(sslEnabled) {
+            InputStream keyPemFileStream = getClass().getClassLoader().getResourceAsStream("cert.crt");
+            if (keyPemFileStream == null) {
+                System.out.println("couldn't read certificate file.exiting...");
+                System.exit(1);
+            }
+            setWebhookMethod.setCertificate(keyPemFileStream);
         }
-        setWebhookMethod.setCertificate(keyPemFileStream);
 
 
         try {
